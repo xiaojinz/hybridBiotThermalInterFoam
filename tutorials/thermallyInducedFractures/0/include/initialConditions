@@ -1,0 +1,15 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+inletFlowRate        5e-5;
+inPressure           0;     
+velocityBC           fixedValue;  
+porousVelocityBC     slip;
+pressureBC 	     fixedFluxPressure;
+
+// ************************************************************************* //

@@ -1,0 +1,126 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.1                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         Euler;
+}
+
+gradSchemes
+{
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    //Fluid Schemes
+    div(rhoPhiByEps,U)  Gauss linearUpwind grad(U);
+    div(phi,alpha)  Gauss linearUpwind grad(U);
+   // div(phi,alpha)  Gauss interfaceCompression;
+    div(phirb,alpha) bounded Gauss upwind;
+    div(((rho*nu)*dev2(T(grad(U)))))  Gauss linear;
+    //div((rhoNu*dev2(T(grad(U)))))  Gauss linear;
+
+
+    //Solid Schemes
+    div(phisEpss,Us)             Gauss linearUpwind grad(Us);
+    div((nu*dev2(T(grad(Us)))))  Gauss linear;
+    div(phis,epss)               Gauss linearUpwind grad(epss);
+
+    //Thermal parts
+    div(rhoPhi,T)              Gauss linear;
+    div(rhosPhis,T)              Gauss linear;   
+    div(phis,T)                Gauss linear;
+    div(phi,T)                Gauss linear;
+    div(phiTotal,T)                Gauss linear;
+    div(rhoPhi,Ke)               Gauss linear;
+    div(phi,p)                   Gauss linear;
+    div(phis,p)                  Gauss linear;
+    div(phis,Ke_s)               Gauss linear;
+    div(rhosPhisEpss,T)              Gauss linear;
+    div(rhoPhiEps,T)              Gauss linear;
+    div(phiEps,T)                Gauss linear;
+    div(phisEpss,T)                Gauss linear;
+    div(rhoEps,T)                Gauss linear;
+    div(rhosEpss,T)                Gauss linear;
+    div(rhoEpsTotal,T)              Gauss linear;
+    div(rhoPhiEpsTotal,T)              Gauss linear;
+    div(rhoPhiEpsCv,T)            Gauss linear;
+    div(rhosPhisEpssCvs,T)            Gauss linear;
+    div((thermal2f*phi),T)           Gauss linear;
+    div((thermal3f*phis),T)           Gauss linear;
+    div(phisWithEpss,T)              Gauss linear;
+    div(rhosPhisWithEpss,T)      Gauss linear;
+    div(rhosPhis,Ke_s)               Gauss linear;
+    div(rhoCvfPhi,T)             Gauss linear;
+    div(rhosCvsPhis,T)             Gauss linear;
+    div(factor1Phir,T)            Gauss linear;
+    div(phir,T)                 Gauss linear;
+    div(factor2Phir,Ke)         Gauss linear;
+    div(rhoCvfPhi+rhosCvsPhis,T)   Gauss linear;
+    div(rhoCpPhi,T)           Gauss linear;
+    div(epssRhosCvsPhis,T)     Gauss linear;
+    div(epsRhoCvfPhi,T)       Gauss linear;
+    div(rhoCvfPhiByEps,T)        Gauss linear;
+    div(rhoCvPhiTotal,T)         Gauss linear;
+    div(phirMy,T)             Gauss linear;
+    div(((rho*nuTotal)*dev2(T(grad(U)))))  Gauss linear;
+    div((muTotal*dev2(T(grad(U)))))  Gauss linear;
+    div(phiWetting,T)          Gauss linear;
+    div((interpolate(Uwetting)&S),T)  Gauss upwind;
+    div((interpolate(UnonWetting)&S),T)  Gauss upwind;
+    div(phiNonWetting,T)          Gauss linear; 
+    div(rhoCvfPhiWetting,T)       Gauss upwind;
+    div(rhoCvfPhiNonWetting,T)    Gauss upwind;
+    div(factor3Phi,T)             Gauss upwind;
+    div(factor4Phi,T)             Gauss upwind;
+    div(rhoCv1PhiWetting,T)       Gauss upwind;
+    div(rhoCv2PhiNonWetting,T)    Gauss upwind;
+    div(phirPoreMy,T)             Gauss upwind;
+    div(phiUrTerm)                Gauss limitedLinear 0.5;
+    div(phiRhoCvSolid,T)         Gauss upwind;
+    div(phiRhoCvFluid,T)          Gauss upwind;
+    div((phi*interpolate(rhoCv_f)),T)   Gauss upwind;
+    div((phis*interpolate(rhoCv_s)),T)   Gauss upwind;
+    div(UrFlux,T)           Gauss upwind;
+    div(fluxNonwetting,T)    Gauss upwind;
+    div(fluxWetting,T)    Gauss upwind;
+    div(fluxNonwetting,alpha1T)    Gauss upwind;
+    div(fluxWetting,alpha2T)    Gauss upwind;
+    div(phiUrTerm,T)        Gauss upwind;
+    div(phiUrKe,Ke)         Gauss linear;
+    div(Us)         Gauss linear;
+    div((((2*nu)*symm(grad(Us)))+(((kappa-(0.666667*nu))*tr(grad(Us)))*(1))))   Gauss linear;
+    div(((kappa_kin*div(Us))*I))   Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear orthogonal; //corrected if not orthogonal
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         orthogonal; //corrected if non orthogonal
+}
+
+// ************************************************************************* //

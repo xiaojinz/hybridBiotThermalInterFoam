@@ -1,0 +1,131 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.1                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+
+convertToMeters 1;
+
+r1 0.0025; //radius of inner circle
+r1n -0.0025;
+r2 0.125;  //radius of outer circle
+r2n -0.125;
+x1 #calc "$r1/1.4142136";  //coordinate of inter circle vertices
+x1n #calc "$r1n/1.4142136";
+x2 #calc "$r2/1.4142136";  //coordinate of outer circle vertices
+x2n #calc "$r2n/1.4142136";
+z 0.01;  //thickness
+
+// Square cell settings (49,920 total cells)
+NrActual 156;
+NtActual 80;
+// Computed as (r2/r1)^(1/(NrActual-1))
+G 68.2;
+
+vertices
+(
+    ( $r1  0 0)
+    ( 0  $r1 0)
+    ( $r1n 0 0)
+    ( 0 $r1n 0)
+    ( $r2  0 0)
+    ( 0  $r2 0)
+    ( $r2n 0 0)
+    ( 0 $r2n 0)
+
+    ( $r1  0 $z)
+    ( 0 $r1  $z)
+    ( $r1n 0 $z)
+    ( 0 $r1n $z)
+    ( $r2  0 $z)
+    ( 0 $r2 $z)
+    ( $r2n  0 $z)
+    ( 0 $r2n $z)
+);
+
+
+
+blocks
+(
+    hex (1 0 4 5  9  8 12 13) ($NtActual $NrActual 1) simpleGrading (1 $G 1) //tangential,radial, axial
+    hex (2 1 5 6 10  9 13 14) ($NtActual $NrActual 1) simpleGrading (1 $G 1)
+    hex (3 2 6 7 11 10 14 15) ($NtActual $NrActual 1) simpleGrading (1 $G 1)
+    hex (0 3 7 4  8 11 15 12) ($NtActual $NrActual 1) simpleGrading (1 $G 1)
+);
+
+
+
+edges
+(
+    arc 0 1 ($x1 $x1 0)
+    arc 1 2 ($x1n $x1 0)
+    arc 2 3 ($x1n $x1n 0)
+    arc 3 0 ($x1 $x1n 0)
+    arc 8 9 ($x1 $x1 $z)
+    arc 9 10 ($x1n $x1 $z)
+    arc 10 11 ($x1n $x1n $z)
+    arc 11 8  ($x1 $x1n $z)
+
+    arc 4 5 ($x2 $x2 0)
+    arc 5 6 ($x2n $x2 0)
+    arc 6 7 ($x2n $x2n 0)
+    arc 7 4 ($x2 $x2n 0)
+    arc 12 13 ($x2 $x2 $z)
+    arc 13 14 ($x2n $x2 $z)
+    arc 14 15 ($x2n $x2n $z)
+    arc 15 12 ($x2 $x2n $z)
+);
+
+defaultPatch
+{
+    name    frontAndBack;
+    type    empty;
+}
+
+boundary
+(
+    innerWall
+    {
+        type patch;
+        faces
+        (
+            (1 0  8  9)
+            (2 1  9 10)
+            (3 2 10 11)
+            (0 3 11 8)
+        );
+    }
+
+    outerWall
+    {
+        type patch;
+        faces
+        (
+            (5 13 12 4)
+            (6 14 13 5)
+            (7 15 14 6)
+            (4 12 15 7)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+
+
+
+// ************************************************************************* //

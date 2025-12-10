@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+module load intel/2021.1.2
+module load intel-mpi/intel/2021.7.0
+
+
+
+bash clean
+rm -r processor*
+
+blockMesh
+
+decomposePar
+
+srun hybridBiotThermalInterFoam -parallel
+
+reconstructPar
+
+rm -r processor*
+
+
+

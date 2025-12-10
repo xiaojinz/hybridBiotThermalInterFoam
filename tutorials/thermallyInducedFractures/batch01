@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --ntasks=96
+#SBATCH --cpus-per-task=1
+#SBATCH --job-name=openfoam
+
+#SBATCH --error=error.err
+#SBATCH --output=output.out
+#SBATCH --mail-user=xiaojin.zheng@princeton.edu
+#SBATCH --mail-type=all
+
+#SBATCH --time=02:00:00
+
+module purge
+module load intel/2021.1.2
+module load intel-mpi/intel/2021.7.0
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export SRUN_CPUS_PER_TASK=$SLURM_CPUS_PER_TASK
+
+source $HOME/.bashrc
+source ./run
+#srun hybridBiotThermalInterFoam -parallel
+
+
+
+
